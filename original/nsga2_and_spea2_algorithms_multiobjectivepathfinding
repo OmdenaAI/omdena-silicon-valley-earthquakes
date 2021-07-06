@@ -1,0 +1,23 @@
+#There are 3 packages to use nsga2 and spea2 algorithms by combining the file "Multi_Objective_Pathfinding" in this repository. 
+
+#First: jmetalpy :  https://readthedocs.org/projects/jmetalpy/downloads/pdf/stable/
+# https://github.com/jMetal/jMetalPy
+
+!pip3 install jmetalpy
+import jmetal
+
+#Second: geatpy :  https://github.com/geatpy-dev/geatpy
+
+import subprocess
+import sys
+
+def install(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+    
+install('geatpy')
+import geatpy as ea
+
+#Third: inspyred :  https://aarongarrett.github.io/inspyred/examples.html
+
+install('inspyred')
+import inspyred

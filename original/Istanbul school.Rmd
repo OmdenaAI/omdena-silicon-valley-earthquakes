@@ -1,0 +1,77 @@
+---
+title: "Istanbul School Map"
+author: "Li Wang"
+date: "12/10/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Use OSM data to map schools in Istanbul
+
+
+```{r dataset}
+#install the osmdata, sf, tidyverse and ggmap package
+if(!require("osmdata")) install.packages("osmdata")
+if(!require("tidyverse")) install.packages("tidyverse")
+if(!require("sf")) install.packages("sf")
+if(!require("ggmap")) install.packages("ggmap")
+
+#load packages
+library(tidyverse)
+library(osmdata)
+library(sf)
+library(ggmap)
+
+#the first five features
+head(available_features())
+head(available_tags("amenity")) #school is under amenity
+
+#building the query
+q <- getbb("Istanbul")%>%
+  opq()%>%
+  add_osm_feature("amenity", "school")
+
+str(q)
+
+school <- osmdata_sf(q)
+school
+```
+
+## background map
+
+
+```{r background Map, echo=T}
+mad_map <- get_map(getbb("Istanbul"),maptype = "toner-background")
+```
+
+## final map
+
+```{r final Map}
+ggmap(mad_map)+
+  geom_sf(data=school$osm_points,
+          inherit.aes =FALSE, #it has to use the aesthetic mappings of the spatial object osm_points
+          colour="#238443",
+          fill="#004529",
+          alpha=.5,
+          size=1,
+          shape=21)+
+  labs(x="",y="")
+```
+
+## map with points only
+```{r point only}
+ggplot(school$osm_points)+
+  geom_sf(colour="#08519c",
+          fill="#08306b",
+          alpha=.5,
+          size=1,
+          shape=21)+
+  coord_sf(datum=NA)+
+  theme_void()
+```
+
+## Acknowledgement: 
+This is developped based on Dominic Roye's tutorial and codes, https://dominicroye.github.io/en/2018/accessing-openstreetmap-data-with-r/
