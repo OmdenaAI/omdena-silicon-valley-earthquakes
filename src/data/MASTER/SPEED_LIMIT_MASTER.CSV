@@ -1,0 +1,11 @@
+highway_single_element,max_speed,max_speed_risk_score
+cycleway,15,9
+motorway,65,4
+path,25,8
+primary,40,6
+residential,25,8
+secondary,40,6
+secondary_link,40,6
+service,15,9
+tertiary,30,7
+unclassified,15,9
