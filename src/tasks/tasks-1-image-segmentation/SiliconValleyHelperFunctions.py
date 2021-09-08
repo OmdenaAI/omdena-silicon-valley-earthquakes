@@ -69,9 +69,7 @@ def SpeedLimitColumnFormatter(edges):
 
 def SpeedMasterFileGenerator(file_path,edges):
   '''
-  This function takes a formatted edges dataframe from the speed_limit_master_formatter function
-  speed_limit_master_formatter returns 2 columns which then need to be appended to edges dataframe
-  before passing to this function
+  This function generates the master file for speed Limit
   There are many speed limits for the same category hence we will take the median values
   The ouput of this function is a file which can then be used to impute missing values
   '''
@@ -350,5 +348,26 @@ def BuildingDensityCalculator(block_name,edges):
     
     return edges                                           
                                             
-                                            
+def RiskFactorGraph(block_name,edges,nodes,path,column):
+
+  '''
+  This function plots the graph of the Risk Factors and saves it at the path
+  It takes in the edges dataframe,nodes dataframe,the block name,the column to be plotted
+  and the filepath where the image needs to be saved
+
+  '''
+
+  gdf = ox.geocoder.geocode_to_gdf("North Hills , Los Angeles")
+  footprints=ox.geometries.geometries_from_place("North Hills Los Angeles", tags={"building":True})
+  fig, ax = plt.subplots(figsize=(20, 20))
+  gdf.plot(ax=ax, facecolor='black')
+  edges.plot(ax=ax, linewidth=2, column=column, cmap='YlOrBr')
+  nodes.plot(ax=ax, linewidth=0, facecolor='white')
+  footprints.plot(ax=ax,facecolor='green')
+  sm = plt.cm.ScalarMappable(cmap='YlOrBr', norm = matplotlib.colors.Normalize(vmin=edges[column].min(), vmax=edges[column].min()))
+  sm.set_array([])
+  fig.colorbar(sm, ax=ax)
+  ax.set_title('Visualizing risks')
+  fig.tight_layout()
+  fig.savefig(path+block_name+'_'+column+'_.png')
 
